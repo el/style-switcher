@@ -40,7 +40,7 @@ const styles: MapboxStyleDefinition[] = [
 map.addControl(new MapboxStyleSwitcherControl(styles));
 ```
 
-## Images
+## Screenshots
 
 ![Closed](assets/closed.png)
 
