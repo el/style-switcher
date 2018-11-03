@@ -14,7 +14,7 @@ npm i mapbox-gl-style-switcher --save
 import { MapboxStyleSwitcherControl } from "mapbox-gl-style-switcher";
 import { Map as MapboxMap } from "mapbox-gl";
 
-import "@mapbox-gl-style-switcher/styles";
+import "mapbox-gl-style-switcher/styles.css";
 
 const map = new MapboxMap();
 map.addControl(new MapboxStyleSwitcherControl());
