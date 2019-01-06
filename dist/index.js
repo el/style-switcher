@@ -18,8 +18,8 @@ class MapboxStyleSwitcherControl {
         for (const style of this.styles) {
             const styleElement = document.createElement("button");
             styleElement.innerText = style.title;
-            styleElement.classList.add(style.title);
             styleElement.dataset.uri = style.uri;
+            styleElement.classList.add(style.title.replace(/[^a-z0-9-]/gi, '_'));
             styleElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
                 map.setStyle(srcElement.dataset.uri);
