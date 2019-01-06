@@ -45,7 +45,6 @@ export class MapboxStyleSwitcherControl implements IControl
             styleElement.innerText = style.title;
             styleElement.classList.add(style.title.replace(/[^a-z0-9-]/gi, '_'));
             styleElement.dataset.uri = JSON.stringify(style.uri);
-            styleElement.dataset.uri = style.uri;
             styleElement.addEventListener("click", event =>
             {
                 const srcElement = event.srcElement as HTMLButtonElement;
