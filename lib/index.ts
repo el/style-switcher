@@ -43,12 +43,12 @@ export class MapboxStyleSwitcherControl implements IControl
         {
             const styleElement = document.createElement("button");
             styleElement.innerText = style.title;
-            styleElement.classList.add(style.title);
+            styleElement.classList.add(style.title.replace(/[^a-z0-9-]/gi, ''));
             styleElement.dataset.uri = style.uri;
             styleElement.addEventListener("click", event =>
             {
                 const srcElement = event.srcElement as HTMLButtonElement;
-                map.setStyle(srcElement.dataset.uri!);
+                map.setStyle(JSON.parse(srcElement.dataset.uri!));
                 mapStyleContainer.style.display = "none";
                 styleButton.style.display = "block";
                 const elms = mapStyleContainer.getElementsByClassName("active");
