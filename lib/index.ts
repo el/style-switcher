@@ -26,6 +26,7 @@ export class MapboxStyleSwitcherControl implements IControl
     constructor(styles?: MapboxStyleDefinition[])
     {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        this.onDocumentClick = this.onDocumentClick.bind(this);
     }
 
     public getDefaultPosition(): string
@@ -97,7 +98,8 @@ export class MapboxStyleSwitcherControl implements IControl
 
     private onDocumentClick(event: MouseEvent): void
     {
-        if (!this.controlContainer!.contains(event.target as Element) && this.mapStyleContainer && this.styleButton)
+        if (this.controlContainer && !this.controlContainer.contains(event.target as Element)
+            && this.mapStyleContainer && this.styleButton)
         {
             this.mapStyleContainer.style.display = "none";
             this.styleButton.style.display = "block";

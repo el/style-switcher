@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 class MapboxStyleSwitcherControl {
     constructor(styles) {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        this.onDocumentClick = this.onDocumentClick.bind(this);
     }
     getDefaultPosition() {
         const defaultPosition = "top-right";
@@ -58,7 +59,8 @@ class MapboxStyleSwitcherControl {
         this.map = undefined;
     }
     onDocumentClick(event) {
-        if (!this.controlContainer.contains(event.target) && this.mapStyleContainer && this.styleButton) {
+        if (this.controlContainer && !this.controlContainer.contains(event.target)
+            && this.mapStyleContainer && this.styleButton) {
             this.mapStyleContainer.style.display = "none";
             this.styleButton.style.display = "block";
         }
