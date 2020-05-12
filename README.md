@@ -10,7 +10,7 @@ npm i mapbox-gl-style-switcher --save
 
 ## Demo:
 
-- (codesandbox)[https://codesandbox.io/s/elegant-night-wi9v4]
+- [codesandbox](https://codesandbox.io/s/elegant-night-wi9v4)
 
 ## Usage:
 
