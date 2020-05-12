@@ -8,6 +8,10 @@ Adds a style switcher to `mapbox-gl`
 npm i mapbox-gl-style-switcher --save
 ```
 
+## Demo:
+
+- (codesandbox)[https://codesandbox.io/s/elegant-night-wi9v4]
+
 ## Usage:
 
 ```ts
