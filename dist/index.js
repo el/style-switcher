@@ -9,12 +9,13 @@ class MapboxStyleSwitcherControl {
         return defaultPosition;
     }
     onAdd(map) {
+        this.map = map;
         this.controlContainer = document.createElement("div");
         this.controlContainer.classList.add("mapboxgl-ctrl");
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
-        const mapStyleContainer = document.createElement("div");
-        const styleButton = document.createElement("button");
-        mapStyleContainer.classList.add("mapboxgl-style-list");
+        this.mapStyleContainer = document.createElement("div");
+        this.styleButton = document.createElement("button");
+        this.mapStyleContainer.classList.add("mapboxgl-style-list");
         for (const style of this.styles) {
             const styleElement = document.createElement("button");
             styleElement.innerText = style.title;
@@ -22,10 +23,10 @@ class MapboxStyleSwitcherControl {
             styleElement.dataset.uri = JSON.stringify(style.uri);
             styleElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
-                map.setStyle(JSON.parse(srcElement.dataset.uri));
-                mapStyleContainer.style.display = "none";
-                styleButton.style.display = "block";
-                const elms = mapStyleContainer.getElementsByClassName("active");
+                this.map.setStyle(JSON.parse(srcElement.dataset.uri));
+                this.mapStyleContainer.style.display = "none";
+                this.styleButton.style.display = "block";
+                const elms = this.mapStyleContainer.getElementsByClassName("active");
                 while (elms[0]) {
                     elms[0].classList.remove("active");
                 }
@@ -34,26 +35,33 @@ class MapboxStyleSwitcherControl {
             if (style.title === MapboxStyleSwitcherControl.DEFAULT_STYLE) {
                 styleElement.classList.add("active");
             }
-            mapStyleContainer.appendChild(styleElement);
+            this.mapStyleContainer.appendChild(styleElement);
         }
-        styleButton.classList.add("mapboxgl-ctrl-icon");
-        styleButton.classList.add("mapboxgl-style-switcher");
-        styleButton.addEventListener("click", () => {
-            styleButton.style.display = "none";
-            mapStyleContainer.style.display = "block";
+        this.styleButton.classList.add("mapboxgl-ctrl-icon");
+        this.styleButton.classList.add("mapboxgl-style-switcher");
+        this.styleButton.addEventListener("click", () => {
+            this.styleButton.style.display = "none";
+            this.mapStyleContainer.style.display = "block";
         });
-        document.addEventListener("click", event => {
-            if (!this.controlContainer.contains(event.target)) {
-                mapStyleContainer.style.display = "none";
-                styleButton.style.display = "block";
-            }
-        });
-        this.controlContainer.appendChild(styleButton);
-        this.controlContainer.appendChild(mapStyleContainer);
+        document.addEventListener("click", this.onDocumentClick);
+        this.controlContainer.appendChild(this.styleButton);
+        this.controlContainer.appendChild(this.mapStyleContainer);
         return this.controlContainer;
     }
     onRemove() {
-        return;
+        if (!this.controlContainer || !this.controlContainer.parentNode || !this.map || !this.styleButton) {
+            return;
+        }
+        this.styleButton.removeEventListener("click", this.onDocumentClick);
+        this.controlContainer.parentNode.removeChild(this.controlContainer);
+        document.removeEventListener("click", this.onDocumentClick);
+        this.map = undefined;
+    }
+    onDocumentClick(event) {
+        if (!this.controlContainer.contains(event.target) && this.mapStyleContainer && this.styleButton) {
+            this.mapStyleContainer.style.display = "none";
+            this.styleButton.style.display = "block";
+        }
     }
 }
 MapboxStyleSwitcherControl.DEFAULT_STYLE = "Streets";
