@@ -16,9 +16,11 @@ class MapboxStyleSwitcherControl {
         this.controlContainer.classList.add("mapboxgl-ctrl-group");
         this.mapStyleContainer = document.createElement("div");
         this.styleButton = document.createElement("button");
+        this.styleButton.setAttribute('type', 'button');
         this.mapStyleContainer.classList.add("mapboxgl-style-list");
         for (const style of this.styles) {
             const styleElement = document.createElement("button");
+            styleElement.setAttribute('type', 'button');
             styleElement.innerText = style.title;
             styleElement.classList.add(style.title.replace(/[^a-z0-9-]/gi, '_'));
             styleElement.dataset.uri = JSON.stringify(style.uri);
