@@ -24,6 +24,9 @@ class MapboxStyleSwitcherControl {
             styleElement.dataset.uri = JSON.stringify(style.uri);
             styleElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
+                if (srcElement.classList.contains("active")) {
+                    return;
+                }
                 this.map.setStyle(JSON.parse(srcElement.dataset.uri));
                 this.mapStyleContainer.style.display = "none";
                 this.styleButton.style.display = "block";
