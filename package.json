@@ -1,6 +1,6 @@
 {
   "name": "mapbox-gl-style-switcher",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Mapbox GL JS Style Switcher",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/el/style-switcher#readme",
   "dependencies": {
-    "mapbox-gl": "^1.9.0"
+    "mapbox-gl": "^1.11.1"
   },
   "devDependencies": {
     "@types/mapbox-gl": "^1.9.0",
