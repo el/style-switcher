@@ -11,7 +11,8 @@ export declare class MapboxStyleSwitcherControl implements IControl {
     private mapStyleContainer;
     private styleButton;
     private styles;
-    constructor(styles?: MapboxStyleDefinition[]);
+    private defaultStyle;
+    constructor(styles?: MapboxStyleDefinition[], defaultStyle?: string);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;

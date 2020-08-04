@@ -44,6 +44,12 @@ const styles: MapboxStyleDefinition[] = [
 map.addControl(new MapboxStyleSwitcherControl(styles));
 ```
 
+If you want to specify a default style, pass them in the constructor as second argument.
+
+```ts
+map.addControl(new MapboxStyleSwitcherControl(styles, 'Dark'));
+```
+
 ## Screenshots
 
 ![Closed](assets/closed.png)

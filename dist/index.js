@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class MapboxStyleSwitcherControl {
-    constructor(styles) {
+    constructor(styles, defaultStyle) {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
     }
     getDefaultPosition() {
@@ -38,7 +39,7 @@ class MapboxStyleSwitcherControl {
                 }
                 srcElement.classList.add("active");
             });
-            if (style.title === MapboxStyleSwitcherControl.DEFAULT_STYLE) {
+            if (style.title === this.defaultStyle) {
                 styleElement.classList.add("active");
             }
             this.mapStyleContainer.appendChild(styleElement);
