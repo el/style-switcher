@@ -22,10 +22,12 @@ export class MapboxStyleSwitcherControl implements IControl
     private mapStyleContainer: HTMLElement | undefined;
     private styleButton: HTMLButtonElement | undefined;
     private styles: MapboxStyleDefinition[];
+    private defaultStyle: string;
 
-    constructor(styles?: MapboxStyleDefinition[])
+    constructor(styles?: MapboxStyleDefinition[], defaultStyle?: string)
     {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
     }
 
@@ -69,7 +71,7 @@ export class MapboxStyleSwitcherControl implements IControl
                 }
                 srcElement.classList.add("active");
             });
-            if (style.title === MapboxStyleSwitcherControl.DEFAULT_STYLE)
+            if (style.title === this.defaultStyle)
             {
                 styleElement.classList.add("active");
             }
