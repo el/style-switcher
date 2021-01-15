@@ -2,6 +2,9 @@
 
 Adds a style switcher to `mapbox-gl`
 
+![](https://img.shields.io/bundlephobia/min/mapbox-gl-style-switcher) <a href="https://www.npmjs.com/package/mapbox-gl-style-switcher">![](https://img.shields.io/npm/v/mapbox-gl-style-switcher)</a> ![](https://img.shields.io/npm/types/mapbox-gl-style-switcher) ![](https://img.shields.io/npm/l/mapbox-gl-style-switcher) 
+
+
 ## Installation:
 
 ```bash
