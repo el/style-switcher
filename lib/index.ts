@@ -6,6 +6,19 @@ export type MapboxStyleDefinition =
     uri: string;
 }
 
+export type MapboxStyleSwitcherOptions =
+{
+    defaultStyle?: string;
+    eventListeners?: MapboxStyleSwitcherEvents;
+}
+
+type MapboxStyleSwitcherEvents =
+{
+    onOpen?: (event: MouseEvent) => boolean;
+    onSelect?: (event: MouseEvent) => boolean;
+    onChange?: (event: MouseEvent, style: string) => boolean;
+}
+
 export class MapboxStyleSwitcherControl implements IControl
 {
     private static readonly DEFAULT_STYLE = "Streets";
@@ -18,17 +31,20 @@ export class MapboxStyleSwitcherControl implements IControl
     ];
 
     private controlContainer: HTMLElement | undefined;
+    private events?: MapboxStyleSwitcherEvents;
     private map?: MapboxMap;
     private mapStyleContainer: HTMLElement | undefined;
     private styleButton: HTMLButtonElement | undefined;
     private styles: MapboxStyleDefinition[];
     private defaultStyle: string;
 
-    constructor(styles?: MapboxStyleDefinition[], defaultStyle?: string)
+    constructor(styles?: MapboxStyleDefinition[], options?: MapboxStyleSwitcherOptions | string)
     {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        const defaultStyle = typeof(options) === "string" ? options : options ? options.defaultStyle : undefined;
         this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
+        this.events = typeof(options) !== "string" && options ? options.eventListeners : undefined;
     }
 
     public getDefaultPosition(): string
@@ -61,7 +77,12 @@ export class MapboxStyleSwitcherControl implements IControl
                 {
                     return;
                 }
-                this.map!.setStyle(JSON.parse(srcElement.dataset.uri!));
+                if (this.events && this.events.onOpen && this.events.onOpen(event))
+                {
+                    return;
+                }
+                const style = JSON.parse(srcElement.dataset.uri!);
+                this.map!.setStyle(style);
                 this.mapStyleContainer!.style.display = "none";
                 this.styleButton!.style.display = "block";
                 const elms = this.mapStyleContainer!.getElementsByClassName("active");
@@ -70,6 +91,10 @@ export class MapboxStyleSwitcherControl implements IControl
                     elms[0].classList.remove("active");
                 }
                 srcElement.classList.add("active");
+                if (this.events && this.events.onChange && this.events.onChange(event, style))
+                {
+                    return;
+                }
             });
             if (style.title === this.defaultStyle)
             {
@@ -79,8 +104,12 @@ export class MapboxStyleSwitcherControl implements IControl
         }
         this.styleButton.classList.add("mapboxgl-ctrl-icon");
         this.styleButton.classList.add("mapboxgl-style-switcher");
-        this.styleButton.addEventListener("click", () =>
+        this.styleButton.addEventListener("click", event =>
         {
+            if (this.events && this.events.onSelect && this.events.onSelect(event))
+            {
+                return;
+            }
             this.styleButton!.style.display = "none";
             this.mapStyleContainer!.style.display = "block";
         });

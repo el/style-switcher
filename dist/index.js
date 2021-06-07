@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class MapboxStyleSwitcherControl {
-    constructor(styles, defaultStyle) {
+    constructor(styles, options) {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        const defaultStyle = typeof (options) === "string" ? options : options ? options.defaultStyle : undefined;
         this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
+        this.events = typeof (options) !== "string" && options ? options.eventListeners : undefined;
     }
     getDefaultPosition() {
         const defaultPosition = "top-right";
@@ -30,7 +32,11 @@ class MapboxStyleSwitcherControl {
                 if (srcElement.classList.contains("active")) {
                     return;
                 }
-                this.map.setStyle(JSON.parse(srcElement.dataset.uri));
+                if (this.events && this.events.onOpen && this.events.onOpen(event)) {
+                    return;
+                }
+                const style = JSON.parse(srcElement.dataset.uri);
+                this.map.setStyle(style);
                 this.mapStyleContainer.style.display = "none";
                 this.styleButton.style.display = "block";
                 const elms = this.mapStyleContainer.getElementsByClassName("active");
@@ -38,6 +44,9 @@ class MapboxStyleSwitcherControl {
                     elms[0].classList.remove("active");
                 }
                 srcElement.classList.add("active");
+                if (this.events && this.events.onChange && this.events.onChange(event, style)) {
+                    return;
+                }
             });
             if (style.title === this.defaultStyle) {
                 styleElement.classList.add("active");
@@ -46,7 +55,10 @@ class MapboxStyleSwitcherControl {
         }
         this.styleButton.classList.add("mapboxgl-ctrl-icon");
         this.styleButton.classList.add("mapboxgl-style-switcher");
-        this.styleButton.addEventListener("click", () => {
+        this.styleButton.addEventListener("click", event => {
+            if (this.events && this.events.onSelect && this.events.onSelect(event)) {
+                return;
+            }
             this.styleButton.style.display = "none";
             this.mapStyleContainer.style.display = "block";
         });
