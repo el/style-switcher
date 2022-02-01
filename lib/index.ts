@@ -73,6 +73,7 @@ export class MapboxStyleSwitcherControl implements IControl
             styleElement.addEventListener("click", event =>
             {
                 const srcElement = event.srcElement as HTMLButtonElement;
+                this.closeModal();
                 if (srcElement.classList.contains("active"))
                 {
                     return;
@@ -83,8 +84,6 @@ export class MapboxStyleSwitcherControl implements IControl
                 }
                 const style = JSON.parse(srcElement.dataset.uri!);
                 this.map!.setStyle(style);
-                this.mapStyleContainer!.style.display = "none";
-                this.styleButton!.style.display = "block";
                 const elms = this.mapStyleContainer!.getElementsByClassName("active");
                 while (elms[0])
                 {
@@ -110,8 +109,7 @@ export class MapboxStyleSwitcherControl implements IControl
             {
                 return;
             }
-            this.styleButton!.style.display = "none";
-            this.mapStyleContainer!.style.display = "block";
+            this.openModal();
         });
 
         document.addEventListener("click", this.onDocumentClick);
@@ -133,13 +131,29 @@ export class MapboxStyleSwitcherControl implements IControl
         this.map = undefined;
     }
 
-    private onDocumentClick(event: MouseEvent): void
+    private closeModal(): void
     {
-        if (this.controlContainer && !this.controlContainer.contains(event.target as Element)
-            && this.mapStyleContainer && this.styleButton)
+        if (this.mapStyleContainer && this.styleButton)
         {
             this.mapStyleContainer.style.display = "none";
             this.styleButton.style.display = "block";
+        }
+    }
+
+    private openModal(): void
+    {
+        if (this.mapStyleContainer && this.styleButton)
+        {
+            this.mapStyleContainer.style.display = "block";
+            this.styleButton.style.display = "none";
+        }
+    }
+
+    private onDocumentClick(event: MouseEvent): void
+    {
+        if (this.controlContainer && !this.controlContainer.contains(event.target as Element))
+        {
+            this.closeModal();
         }
     }
 }

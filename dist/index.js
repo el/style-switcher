@@ -29,6 +29,7 @@ class MapboxStyleSwitcherControl {
             styleElement.dataset.uri = JSON.stringify(style.uri);
             styleElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
+                this.closeModal();
                 if (srcElement.classList.contains("active")) {
                     return;
                 }
@@ -37,8 +38,6 @@ class MapboxStyleSwitcherControl {
                 }
                 const style = JSON.parse(srcElement.dataset.uri);
                 this.map.setStyle(style);
-                this.mapStyleContainer.style.display = "none";
-                this.styleButton.style.display = "block";
                 const elms = this.mapStyleContainer.getElementsByClassName("active");
                 while (elms[0]) {
                     elms[0].classList.remove("active");
@@ -59,8 +58,7 @@ class MapboxStyleSwitcherControl {
             if (this.events && this.events.onSelect && this.events.onSelect(event)) {
                 return;
             }
-            this.styleButton.style.display = "none";
-            this.mapStyleContainer.style.display = "block";
+            this.openModal();
         });
         document.addEventListener("click", this.onDocumentClick);
         this.controlContainer.appendChild(this.styleButton);
@@ -76,11 +74,21 @@ class MapboxStyleSwitcherControl {
         document.removeEventListener("click", this.onDocumentClick);
         this.map = undefined;
     }
-    onDocumentClick(event) {
-        if (this.controlContainer && !this.controlContainer.contains(event.target)
-            && this.mapStyleContainer && this.styleButton) {
+    closeModal() {
+        if (this.mapStyleContainer && this.styleButton) {
             this.mapStyleContainer.style.display = "none";
             this.styleButton.style.display = "block";
+        }
+    }
+    openModal() {
+        if (this.mapStyleContainer && this.styleButton) {
+            this.mapStyleContainer.style.display = "block";
+            this.styleButton.style.display = "none";
+        }
+    }
+    onDocumentClick(event) {
+        if (this.controlContainer && !this.controlContainer.contains(event.target)) {
+            this.closeModal();
         }
     }
 }

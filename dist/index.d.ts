@@ -26,6 +26,8 @@ export declare class MapboxStyleSwitcherControl implements IControl {
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
     onRemove(): void;
+    private closeModal;
+    private openModal;
     private onDocumentClick;
 }
 export {};
