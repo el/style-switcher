@@ -60,6 +60,7 @@ class MapboxStyleSwitcherControl {
             }
             this.openModal();
         });
+        this.map.getContainer().addEventListener("click", this.onDocumentClick);
         this.controlContainer.appendChild(this.styleButton);
         this.controlContainer.appendChild(this.mapStyleContainer);
         return this.controlContainer;
@@ -70,6 +71,7 @@ class MapboxStyleSwitcherControl {
         }
         this.styleButton.removeEventListener("click", this.onDocumentClick);
         this.controlContainer.parentNode.removeChild(this.controlContainer);
+        this.map.getContainer().removeEventListener("click", this.onDocumentClick);
         this.map = undefined;
     }
     closeModal() {
