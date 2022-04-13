@@ -10,6 +10,7 @@ export type MapboxStyleSwitcherOptions =
 {
     defaultStyle?: string;
     eventListeners?: MapboxStyleSwitcherEvents;
+    bindClickToMapContainer?: boolean;
 }
 
 type MapboxStyleSwitcherEvents =
@@ -38,6 +39,9 @@ export class MapboxStyleSwitcherControl implements IControl
     private styles: MapboxStyleDefinition[];
     private defaultStyle: string;
 
+    //#41: could be an optional parameter a cleaner way to cope with shadowDOM issue?
+    private bindClickToMapContainer: boolean = false;
+
     constructor(styles?: MapboxStyleDefinition[], options?: MapboxStyleSwitcherOptions | string)
     {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
@@ -45,6 +49,8 @@ export class MapboxStyleSwitcherControl implements IControl
         this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
         this.events = typeof(options) !== "string" && options ? options.eventListeners : undefined;
+
+        this.bindClickToMapContainer = (typeof (options) !== "string" && options) ? (typeof (options.bindClickToMapContainer) == "boolean" ? options.bindClickToMapContainer : false) : false;
     }
 
     public getDefaultPosition(): string
@@ -112,7 +118,11 @@ export class MapboxStyleSwitcherControl implements IControl
             this.openModal();
         });
 
-        document.addEventListener("click", this.onDocumentClick);
+        if(this.bindClickToMapContainer){
+            this.map.getContainer().addEventListener("click", this.onDocumentClick);
+        } else {
+            document.addEventListener("click", this.onDocumentClick);
+        }
 
         this.controlContainer.appendChild(this.styleButton);
         this.controlContainer.appendChild(this.mapStyleContainer);
@@ -127,7 +137,12 @@ export class MapboxStyleSwitcherControl implements IControl
         }
         this.styleButton.removeEventListener("click", this.onDocumentClick);
         this.controlContainer.parentNode.removeChild(this.controlContainer);
-        document.removeEventListener("click", this.onDocumentClick);
+        
+        if (this.bindClickToMapContainer) {
+            this.map.getContainer().removeEventListener("click", this.onDocumentClick);
+        } else {
+            document.removeEventListener("click", this.onDocumentClick);
+        }
         this.map = undefined;
     }
 
