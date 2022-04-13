@@ -2,11 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class MapboxStyleSwitcherControl {
     constructor(styles, options) {
+        this.bindClickToMapContainer = false;
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
         const defaultStyle = typeof (options) === "string" ? options : options ? options.defaultStyle : undefined;
         this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
         this.events = typeof (options) !== "string" && options ? options.eventListeners : undefined;
+        this.bindClickToMapContainer = (typeof (options) !== "string" && options) ? (typeof (options.bindClickToMapContainer) == "boolean" ? options.bindClickToMapContainer : false) : false;
     }
     getDefaultPosition() {
         const defaultPosition = "top-right";
@@ -60,7 +62,12 @@ class MapboxStyleSwitcherControl {
             }
             this.openModal();
         });
-        this.map.getContainer().addEventListener("click", this.onDocumentClick);
+        if (this.bindClickToMapContainer) {
+            this.map.getContainer().addEventListener("click", this.onDocumentClick);
+        }
+        else {
+            document.addEventListener("click", this.onDocumentClick);
+        }
         this.controlContainer.appendChild(this.styleButton);
         this.controlContainer.appendChild(this.mapStyleContainer);
         return this.controlContainer;
@@ -71,7 +78,12 @@ class MapboxStyleSwitcherControl {
         }
         this.styleButton.removeEventListener("click", this.onDocumentClick);
         this.controlContainer.parentNode.removeChild(this.controlContainer);
-        this.map.getContainer().removeEventListener("click", this.onDocumentClick);
+        if (this.bindClickToMapContainer) {
+            this.map.getContainer().removeEventListener("click", this.onDocumentClick);
+        }
+        else {
+            document.removeEventListener("click", this.onDocumentClick);
+        }
         this.map = undefined;
     }
     closeModal() {
