@@ -8,6 +8,7 @@ export type MapboxStyleDefinition = {
 export type MapboxStyleSwitcherOptions = {
   defaultStyle?: string;
   eventListeners?: MapboxStyleSwitcherEvents;
+  preserveLayers?: boolean;
 };
 
 type MapboxStyleSwitcherEvents = {
@@ -34,6 +35,7 @@ export class MapboxStyleSwitcherControl implements IControl {
   private styleButton: HTMLButtonElement | undefined;
   private styles: MapboxStyleDefinition[];
   private defaultStyle: string;
+  private preserveLayers: boolean = true;
   private defaultLayerList: Set<string> = new Set();
   private defaultSourcesList: Set<string> = new Set();
   private styleCache: Style;
@@ -56,6 +58,8 @@ export class MapboxStyleSwitcherControl implements IControl {
       typeof options !== "string" && options
         ? options.eventListeners
         : undefined;
+    this.preserveLayers =
+      (typeof options !== "string" && options?.preserveLayers) ?? true;
   }
 
   public getDefaultPosition(): string {
@@ -124,8 +128,10 @@ export class MapboxStyleSwitcherControl implements IControl {
             )
           );
 
-          //Readd all pre-existing layers (and sources)
-          this.restoreLayers();
+          //Readd all pre-existing layers (and sources), if the user wants to preserve them
+          if (this.preserveLayers) {
+            this.restoreLayers();
+          }
         });
 
         if (

@@ -6,6 +6,7 @@ export type MapboxStyleDefinition = {
 export type MapboxStyleSwitcherOptions = {
     defaultStyle?: string;
     eventListeners?: MapboxStyleSwitcherEvents;
+    preserveLayers?: boolean;
 };
 type MapboxStyleSwitcherEvents = {
     onOpen?: (event: MouseEvent) => boolean;
@@ -23,6 +24,7 @@ export declare class MapboxStyleSwitcherControl implements IControl {
     private styleButton;
     private styles;
     private defaultStyle;
+    private preserveLayers;
     private defaultLayerList;
     private defaultSourcesList;
     private styleCache;

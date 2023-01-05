@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MapboxStyleSwitcherControl = void 0;
 class MapboxStyleSwitcherControl {
     constructor(styles, options) {
+        var _a;
+        this.preserveLayers = true;
         this.defaultLayerList = new Set();
         this.defaultSourcesList = new Set();
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
@@ -18,6 +20,8 @@ class MapboxStyleSwitcherControl {
             typeof options !== "string" && options
                 ? options.eventListeners
                 : undefined;
+        this.preserveLayers =
+            (_a = (typeof options !== "string" && (options === null || options === void 0 ? void 0 : options.preserveLayers))) !== null && _a !== void 0 ? _a : true;
     }
     getDefaultPosition() {
         const defaultPosition = "top-right";
@@ -70,7 +74,9 @@ class MapboxStyleSwitcherControl {
                     var _a;
                     this.defaultSourcesList = new Set([...this.defaultSourcesList].concat(Object.keys(map.getStyle().sources || {})));
                     this.defaultLayerList = new Set([...this.defaultLayerList].concat(((_a = map.getStyle().layers) === null || _a === void 0 ? void 0 : _a.map((l) => l.id)) || []));
-                    this.restoreLayers();
+                    if (this.preserveLayers) {
+                        this.restoreLayers();
+                    }
                 });
                 if (this.events &&
                     this.events.onChange &&
