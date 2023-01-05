@@ -1,9 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class MapboxStyleSwitcherControl {
-    constructor(styles) {
+    constructor(styles, options) {
         this.styles = styles || MapboxStyleSwitcherControl.DEFAULT_STYLES;
+        const defaultStyle = typeof (options) === "string" ? options : options ? options.defaultStyle : undefined;
+        this.defaultStyle = defaultStyle || MapboxStyleSwitcherControl.DEFAULT_STYLE;
         this.onDocumentClick = this.onDocumentClick.bind(this);
+        this.events = typeof (options) !== "string" && options ? options.eventListeners : undefined;
     }
     getDefaultPosition() {
         const defaultPosition = "top-right";
@@ -26,28 +29,36 @@ class MapboxStyleSwitcherControl {
             styleElement.dataset.uri = JSON.stringify(style.uri);
             styleElement.addEventListener("click", event => {
                 const srcElement = event.srcElement;
+                this.closeModal();
                 if (srcElement.classList.contains("active")) {
                     return;
                 }
-                this.map.setStyle(JSON.parse(srcElement.dataset.uri));
-                this.mapStyleContainer.style.display = "none";
-                this.styleButton.style.display = "block";
+                if (this.events && this.events.onOpen && this.events.onOpen(event)) {
+                    return;
+                }
+                const style = JSON.parse(srcElement.dataset.uri);
+                this.map.setStyle(style);
                 const elms = this.mapStyleContainer.getElementsByClassName("active");
                 while (elms[0]) {
                     elms[0].classList.remove("active");
                 }
                 srcElement.classList.add("active");
+                if (this.events && this.events.onChange && this.events.onChange(event, style)) {
+                    return;
+                }
             });
-            if (style.title === MapboxStyleSwitcherControl.DEFAULT_STYLE) {
+            if (style.title === this.defaultStyle) {
                 styleElement.classList.add("active");
             }
             this.mapStyleContainer.appendChild(styleElement);
         }
         this.styleButton.classList.add("mapboxgl-ctrl-icon");
         this.styleButton.classList.add("mapboxgl-style-switcher");
-        this.styleButton.addEventListener("click", () => {
-            this.styleButton.style.display = "none";
-            this.mapStyleContainer.style.display = "block";
+        this.styleButton.addEventListener("click", event => {
+            if (this.events && this.events.onSelect && this.events.onSelect(event)) {
+                return;
+            }
+            this.openModal();
         });
         document.addEventListener("click", this.onDocumentClick);
         this.controlContainer.appendChild(this.styleButton);
@@ -63,11 +74,21 @@ class MapboxStyleSwitcherControl {
         document.removeEventListener("click", this.onDocumentClick);
         this.map = undefined;
     }
-    onDocumentClick(event) {
-        if (this.controlContainer && !this.controlContainer.contains(event.target)
-            && this.mapStyleContainer && this.styleButton) {
+    closeModal() {
+        if (this.mapStyleContainer && this.styleButton) {
             this.mapStyleContainer.style.display = "none";
             this.styleButton.style.display = "block";
+        }
+    }
+    openModal() {
+        if (this.mapStyleContainer && this.styleButton) {
+            this.mapStyleContainer.style.display = "block";
+            this.styleButton.style.display = "none";
+        }
+    }
+    onDocumentClick(event) {
+        if (this.controlContainer && !this.controlContainer.contains(event.target)) {
+            this.closeModal();
         }
     }
 }

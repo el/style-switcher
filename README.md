@@ -2,6 +2,9 @@
 
 Adds a style switcher to `mapbox-gl`
 
+![](https://img.shields.io/bundlephobia/min/mapbox-gl-style-switcher) <a href="https://www.npmjs.com/package/mapbox-gl-style-switcher">![](https://img.shields.io/npm/v/mapbox-gl-style-switcher)</a> ![](https://img.shields.io/npm/types/mapbox-gl-style-switcher) ![](https://img.shields.io/npm/l/mapbox-gl-style-switcher)
+
+
 ## Installation:
 
 ```bash
@@ -41,7 +44,24 @@ const styles: MapboxStyleDefinition[] = [
     }
 ];
 
-map.addControl(new MapboxStyleSwitcherControl(styles));
+// Pass options (optional)
+const options: MapboxStyleSwitcherOptions = {
+    defaultStyle: "Dark",
+    eventListeners: {
+ // return true if you want to stop execution
+ //           onOpen: (event: MouseEvent) => boolean;
+ //           onSelect: (event: MouseEvent) => boolean;
+ //           onChange: (event: MouseEvent, style: string) => boolean;
+    }
+};
+
+map.addControl(new MapboxStyleSwitcherControl(styles, options));
+```
+
+If you want to specify a default style, pass them in the constructor as second argument.
+
+```ts
+map.addControl(new MapboxStyleSwitcherControl(styles, 'Dark'));
 ```
 
 ## Screenshots
