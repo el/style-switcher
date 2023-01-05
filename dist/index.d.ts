@@ -1,16 +1,17 @@
-import { IControl, Map as MapboxMap } from "mapbox-gl";
-export declare type MapboxStyleDefinition = {
+import { IControl, Map as MapboxMap, Style } from "mapbox-gl";
+export type MapboxStyleDefinition = {
     title: string;
-    uri: string;
+    uri: string | Style;
 };
-export declare type MapboxStyleSwitcherOptions = {
+export type MapboxStyleSwitcherOptions = {
     defaultStyle?: string;
     eventListeners?: MapboxStyleSwitcherEvents;
 };
-declare type MapboxStyleSwitcherEvents = {
+type MapboxStyleSwitcherEvents = {
     onOpen?: (event: MouseEvent) => boolean;
     onSelect?: (event: MouseEvent) => boolean;
     onChange?: (event: MouseEvent, style: string) => boolean;
+    onBeforeChange?: (event: MouseEvent) => boolean;
 };
 export declare class MapboxStyleSwitcherControl implements IControl {
     private static readonly DEFAULT_STYLE;
@@ -22,6 +23,9 @@ export declare class MapboxStyleSwitcherControl implements IControl {
     private styleButton;
     private styles;
     private defaultStyle;
+    private defaultLayerList;
+    private defaultSourcesList;
+    private styleCache;
     constructor(styles?: MapboxStyleDefinition[], options?: MapboxStyleSwitcherOptions | string);
     getDefaultPosition(): string;
     onAdd(map: MapboxMap): HTMLElement;
@@ -29,5 +33,6 @@ export declare class MapboxStyleSwitcherControl implements IControl {
     private closeModal;
     private openModal;
     private onDocumentClick;
+    private restoreLayers;
 }
 export {};
