@@ -134,7 +134,6 @@ class MapboxStyleSwitcherControl {
     }
     restoreLayers() {
         if (this.styleCache) {
-            console.log(this.styleCache);
             const sources = this.styleCache.sources;
             if (sources) {
                 for (const source in sources) {
