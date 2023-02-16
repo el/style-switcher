@@ -203,8 +203,6 @@ export class MapboxStyleSwitcherControl implements IControl {
 
   private restoreLayers(): void {
     if (this.styleCache) {
-      console.log(this.styleCache);
-
       //Readd sources
       const sources = this.styleCache.sources;
       if (sources) {
