@@ -36,11 +36,11 @@ import { MapboxStyleDefinition, MapboxStyleSwitcherControl } from "mapbox-gl-sty
 const styles: MapboxStyleDefinition[] = [
     {
         title: "Dark",
-        uri:"mapbox://styles/mapbox/dark-v9"
+        uri:"mapbox://styles/mapbox/dark-v11"
     },
     {
         title: "Light",
-        uri:"mapbox://styles/mapbox/light-v9"
+        uri:"mapbox://styles/mapbox/light-v11"
     }
 ];
 
